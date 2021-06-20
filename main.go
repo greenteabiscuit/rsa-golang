@@ -18,7 +18,12 @@ func main() {
 	publicKey, privateKey := generateKeys(101, 3259)
 	plainText := "This is a secret"
 	encryptedText := encrypt(plainText, publicKey)
-	decrypt(encryptedText, privateKey)
+	decryptedText := decrypt(encryptedText, privateKey)
+	fmt.Println("Public Key:", publicKey.E, publicKey.N)
+	fmt.Println("Private Key:", privateKey.D, privateKey.N)
+	fmt.Println("Message:", plainText)
+	fmt.Println("Encrypted Text:", encryptedText)
+	fmt.Println("Decrypted Text:", decryptedText)
 }
 
 func generateKeys(p int, q int) (public publicKey, secret privateKey) {
@@ -56,10 +61,7 @@ func gcd(p int, q int) int {
 
 func encrypt(plainText string, publicKey publicKey) string {
 	E, N := publicKey.E, publicKey.N
-	fmt.Println(E, N)
 	resultString := ""
-	// fmt.Println(int('あ'))
-	fmt.Println(string(rune('a')))
 	for _, char := range plainText {
 		res := 1
 		for i := 0; i < E; i++ {
@@ -69,11 +71,10 @@ func encrypt(plainText string, publicKey publicKey) string {
 
 		resultString += string(rune(res))
 	}
-	fmt.Println(resultString)
 	return resultString
 }
 
-func decrypt(encryptedText string, privateKey privateKey) {
+func decrypt(encryptedText string, privateKey privateKey) string {
 	D, N := privateKey.D, privateKey.N
 	resultString := ""
 	for _, char := range encryptedText {
@@ -85,5 +86,5 @@ func decrypt(encryptedText string, privateKey privateKey) {
 
 		resultString += string(rune(res))
 	}
-	fmt.Println(resultString)
+	return resultString
 }
