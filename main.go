@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/big"
 )
 
 type publicKey struct {
@@ -63,13 +64,12 @@ func encrypt(plainText string, publicKey publicKey) string {
 	E, N := publicKey.E, publicKey.N
 	resultString := ""
 	for _, char := range plainText {
-		res := 1
-		for i := 0; i < E; i++ {
-			res *= int(char)
-			res %= N
-		}
+		bigChar := big.NewInt(int64(char))
+		bigE := big.NewInt(int64(E))
+		bigN := big.NewInt(int64(N))
 
-		resultString += string(rune(res))
+		res := *bigChar.Exp(bigChar, bigE, bigN)
+		resultString += string(rune(res.Int64()))
 	}
 	return resultString
 }
@@ -78,13 +78,12 @@ func decrypt(encryptedText string, privateKey privateKey) string {
 	D, N := privateKey.D, privateKey.N
 	resultString := ""
 	for _, char := range encryptedText {
-		res := 1
-		for i := 0; i < D; i++ {
-			res *= int(char)
-			res %= N
-		}
+		bigChar := big.NewInt(int64(char))
+		bigD := big.NewInt(int64(D))
+		bigN := big.NewInt(int64(N))
 
-		resultString += string(rune(res))
+		res := *bigChar.Exp(bigChar, bigD, bigN)
+		resultString += string(rune(res.Int64()))
 	}
 	return resultString
 }
